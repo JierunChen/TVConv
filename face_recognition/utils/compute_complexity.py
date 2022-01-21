@@ -9,6 +9,7 @@ import os
 from face_recognition.model_interface import LitModel
 from argparse import ArgumentParser
 import torch.autograd.profiler as profiler
+import torch.utils.benchmark as benchmark
 
 
 def flops_to_string(flops, units='MMac', precision=2):
@@ -50,6 +51,9 @@ def params_to_string(params_num, units='K', precision=2):
 
 
 def running_time(use_gpu, model, input_size, device, batch_size, runs):
+    '''
+    Might be problematic!!!
+    '''
     if use_gpu:
         torch.backends.cudnn.benchmark = True
         # input = torch.autograd.Variable(torch.rand(batch_size, *input_size), device=device)
@@ -62,7 +66,7 @@ def running_time(use_gpu, model, input_size, device, batch_size, runs):
         sort_name = "cpu_time_total"
     # script_cell = torch.jit.trace(model, [input])
     # script_cell(input)
-    for _ in range(runs):
+    for _ in range(1):
         model(input)
     # with profiler.profile(use_cuda=use_gpu, profile_memory=True) as prof:
     with profiler.profile(use_cuda=use_gpu, profile_memory=False) as prof:
@@ -73,9 +77,49 @@ def running_time(use_gpu, model, input_size, device, batch_size, runs):
     print(prof.key_averages().table(sort_by=sort_name, row_limit=10))
 
 
+def inference(input, model):
+    model(input)
+
+
+def running_time2(use_gpu, model, input_size, device, batch_size, runs):
+    if use_gpu:
+        torch.backends.cudnn.benchmark = True
+        model = model.to(device)
+
+    # Compare takes a list of measurements which we'll save in results.
+    results = []
+
+    batch_sizes = [1, 2, 4, 8, 16]
+    for b in batch_sizes:
+        if use_gpu:
+            input = torch.rand((b, *input_size), device=device)
+        else:
+            input = torch.rand(b, *input_size)
+        # label and sub_label are the rows
+        # description is the column
+        label = 'benchmarking'
+        sub_label = f'{b}'
+        for num_threads in [1, 2, 4, 8]:
+            torch.set_num_threads(num_threads)
+            results.append(benchmark.Timer(
+                stmt='inference(input, model)',
+                setup='from __main__ import inference',
+                globals={'input': input,
+                         'model': model},
+                num_threads=num_threads,
+                label=label,
+                sub_label=sub_label,
+                description='time',
+            ).timeit(runs)
+                           )
+
+    compare = benchmark.Compare(results)
+    compare.print()
+
+
 def complexity(args):
-    if args.threads>0:
-        torch.set_num_threads(args.threads)
+    # if args.threads>0:
+    #     torch.set_num_threads(args.threads)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
     model_transform = False
 
@@ -93,8 +137,8 @@ def complexity(args):
             model_transform = True
     if model_transform:
     # if False:
-        print('model transformed!')
         model = model_transform_for_test(lit_model.model)
+        print('model transformed!')
     else:
         model = lit_model.model
     model.eval()
@@ -102,12 +146,13 @@ def complexity(args):
         # print(model)
 
         input_size = (3, 96, 96)
-        running_time(use_gpu=bool(args.use_gpu),
+        # running_time(use_gpu=bool(args.use_gpu),
+        running_time2(use_gpu=bool(args.use_gpu),
                      model=model,
                      input_size=input_size,
                      device=torch.device("cuda:0"),
                      batch_size=1,
-                     runs=100
+                     runs=args.runs
         )
         """==================================================="""
         """==================================================="""
@@ -156,6 +201,7 @@ if __name__ == "__main__":
     parser.add_argument("--drop_ratio", type=float, default=0)
     parser.add_argument("--threads", type=int, default=0)
     parser.add_argument("--use_gpu", type=int, default=0)
+    parser.add_argument("--runs", type=int, default=10)
 
     # TVConv related
     parser.add_argument("--TVConv_k", type=int, default=3)
@@ -174,7 +220,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     model_list=[
-        'mobilenet_v2_x0_1',
+        # 'mobilenet_v2_x0_1',
         'mobilenet_v2_x0_1',
         'mobilenet_v2_x0_2',
         'mobilenet_v2_x0_3',
