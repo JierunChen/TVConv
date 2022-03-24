@@ -8,8 +8,8 @@ This is the official Pytorch/PytorchLightning implementation of our paper: <br/>
 > *In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2022*
 
 <p float="left">
-  <img src="figs/applications.JPG" width="53%" />
-  <img src="figs/compatison.JPG" width="46%" />
+  <img src="figs/applications.JPG" width="56%" />
+  <img src="figs/compatison.JPG" width="43%" />
 
 ## Requirements
 
