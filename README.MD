@@ -1,13 +1,15 @@
 # TVConv: Efficient Translation Variant Convolution for Layout-aware Visual Processing [CVPR 2022]
 
 <p align="center"><img src="figs/visualization.JPG" width="100%" alt="" /></p>
-This is the official Pytorch/PytorchLightning implementation of our efficient Translation Variant Convolution (TVConv): <br/>
+
+This is the official Pytorch/PytorchLightning implementation of our paper: <br/>
 > [**TVConv: Efficient Translation Variant Convolution for Layout-aware Visual Processing**](https://arxiv.org/abs/2203.10489)      
 > Jierun Chen, Tianlang He, Weipeng Zhuo, Li Ma, Sangtae Ha, S.-H. Gary Chan        
 > *In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2022*
+
 <p float="left">
-  <img src="figs/applications.JPG" width="49%" />
-  <img src="figs/compatison.JPG" width="49%" />
+  <img src="figs/applications.JPG" width="53%" />
+  <img src="figs/compatison.JPG" width="46%" />
 
 ## Requirements
 
@@ -84,7 +86,7 @@ If you find our work useful in your research, please consider citing:
 
     @inproceedings{chen2022tvconv,
       title={TVConv: Efficient Translation Variant Convolution for Layout-aware Visual Processing},
-      author={Chen, Jierun and He, Tianlang and Zhuo, Weipeng and Ma, Li and Ha, Sangtae and Chan, S.-H. Gary},
+      author={Chen, Jierun and He, Tianlang and Zhuo, Weipeng and Ma, Li and Ha, Sangtae and Chan, S-H Gary},
       booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
       year={2022}
     }
