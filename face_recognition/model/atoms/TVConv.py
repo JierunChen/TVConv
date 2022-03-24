@@ -186,8 +186,8 @@ if __name__ == '__main__':
     torch.manual_seed(0)
 
     c = 3
-    h = 128
-    w = 128
+    h = 96
+    w = 96
 
     data = torch.randn(1, c, h, w)
 
@@ -211,10 +211,16 @@ if __name__ == '__main__':
             model1.weight_layers(model1.posi_map).detach(),
             model1.unfold)
 
-        with torch.autograd.profiler.profile() as prof:
-            for _ in range(100):  # any normal python code, really!
-                # model1(data)
-                model2(data)
-        print(prof.key_averages().table(sort_by="self_cpu_time_total"))
+
+        out1 = model1(data)
+        out2 = model2(data)
+        print(torch.eq(out1, out2))
+        print(torch.all(torch.eq(out1, out2)))
+
+        # with torch.autograd.profiler.profile() as prof:
+        #     for _ in range(100):  # any normal python code, really!
+        #         # model1(data)
+        #         model2(data)
+        # print(prof.key_averages().table(sort_by="self_cpu_time_total"))
 
 

@@ -99,7 +99,7 @@ def running_time2(use_gpu, model, input_size, device, batch_size, runs):
         # description is the column
         label = 'benchmarking'
         sub_label = f'{b}'
-        for num_threads in [1, 2, 4, 8]:
+        for num_threads in [1, 2, 4]:
             torch.set_num_threads(num_threads)
             results.append(benchmark.Timer(
                 stmt='inference(input, model)',
@@ -136,7 +136,21 @@ def complexity(args):
         if args.atom=='TVConv':
             model_transform = True
     if model_transform:
-    # if False:
+
+        # # check if the outputs are consistent before and after model_transform
+        # with torch.no_grad():
+        #     input_size = (3, 96, 96)
+        #     input = torch.rand(1, *input_size)
+        #     model1 = lit_model.model
+        #     model2 = model_transform_for_test(lit_model.model)
+        #     model1.eval()
+        #     model2.eval()
+        #     out1 = model1(input)
+        #     out2 = model2(input)
+        #     print(torch.eq(out1, out2))
+        #     print(torch.all(torch.eq(out1, out2)))
+        #     exit()
+
         model = model_transform_for_test(lit_model.model)
         print('model transformed!')
     else:
