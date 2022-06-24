@@ -83,14 +83,15 @@ The results will be saved within the `./od_oc_segmentation/result` folder.
 ## Citation
 
 If you find our work useful in your research, please consider citing:
-  @InProceedings{Chen_2022_CVPR,
-    author    = {Chen, Jierun and He, Tianlang and Zhuo, Weipeng and Ma, Li and Ha, Sangtae and Chan, S.-H. Gary},
-    title     = {TVConv: Efficient Translation Variant Convolution for Layout-Aware Visual Processing},
-    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-    month     = {June},
-    year      = {2022},
-    pages     = {12548-12558}
-  }
+  
+      @InProceedings{Chen_2022_CVPR,
+        author    = {Chen, Jierun and He, Tianlang and Zhuo, Weipeng and Ma, Li and Ha, Sangtae and Chan, S.-H. Gary},
+        title     = {TVConv: Efficient Translation Variant Convolution for Layout-Aware Visual Processing},
+        booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+        month     = {June},
+        year      = {2022},
+        pages     = {12548-12558}
+      }
 
 ## Acknowledgement
 
